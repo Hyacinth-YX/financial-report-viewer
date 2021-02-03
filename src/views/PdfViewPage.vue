@@ -9,20 +9,20 @@
                     Financial Report Viewer
                 </q-toolbar-title>
 
-                <q-input bottom-slots v-model="text" rounded outlined hide-bottom-space
+                <q-input bottom-slots v-model="codeText" rounded outlined hide-bottom-space
                          placeholder="输入证券代码或简称" :dense="true" color="lime-11" bg-color="white">
                     <template v-slot:append>
-                        <q-icon v-if="text !== ''" name="close" @click="text = ''" class="cursor-pointer"/>
+                        <q-icon v-if="codeText !== ''" name="close" @click="codeText = ''" class="cursor-pointer"/>
                         <q-icon name="search"/>
                     </template>
                 </q-input>
             </q-toolbar>
-
-            <!--            <q-tabs align="left">-->
-            <!--                <q-route-tab to="/page1" label="Page One"/>-->
-            <!--                <q-route-tab to="/page2" label="Page Two"/>-->
-            <!--                <q-route-tab to="/page3" label="Page Three"/>-->
-            <!--            </q-tabs>-->
+            <div class="fit row justify-end items-end  q-gutter-md">
+                <q-select v-model="yearChoose" :options="yearOptions" bg-color="white" label="年度"
+                          class="q-ma-sm q-pt-md " style="min-width: 150px" dense/>
+                <q-select v-model="typeChoose" :options="typeOptions" bg-color="white" label="公告类型"
+                          class="q-ma-sm q-pd-md" style="min-width: 150px" dense/>
+            </div>
         </q-header>
 
         <q-drawer show-if-above v-model="left" side="left" :width="drawWidth" bordered>
@@ -39,11 +39,12 @@
                             draggable="false"
                     >
 
-                        <q-tab name="index" icon="mail" label="目录"/>
-                        <q-tab name="entity" icon="alarm" label="实体"/>
+                        <q-tab name="index" icon="view_list" label="目录"/>
+                        <q-tab name="entity" icon="store" label="实体"/>
                         <q-tab name="search" icon="search" label="检索"/>
-                        <q-tab name="emotion" icon="people" label="情绪"/>
-                        <q-tab name="relation" icon="movie" label="关系"/>
+                        <q-tab name="emotion" icon="face" label="情绪"/>
+                        <q-tab name="relation" icon="people" label="关系"/>
+                        <q-tab name="history" icon="hourglass_full" label="历年比较"/>
                     </q-tabs>
                 </template>
 
@@ -63,37 +64,26 @@
                         </q-tab-panel>
 
                         <q-tab-panel name="entity">
-                            <div class="text-h4 q-mb-md">Alarms</div>
-                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam
-                                odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda
-                                consectetur culpa fuga nulla ullam. In, libero.</p>
-                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam
-                                odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda
-                                consectetur culpa fuga nulla ullam. In, libero.</p>
+                            <div class="text-h4 q-mb-md">查看所有实体</div>
+                            <report-entity :selectedEntity.sync="searchText"></report-entity>
                         </q-tab-panel>
 
 
                         <q-tab-panel name="search">
-                            <q-input bottom-slots v-model="text" outlined
-                                     placeholder="搜索百科" :dense="true" color="lime-11" bg-color="white">
-                                <template v-slot:append>
-                                    <q-icon v-if="text !== ''" name="close" @click="text = ''" class="cursor-pointer"/>
-                                    <q-icon name="search"/>
-                                </template>
-                            </q-input>
-                            <div class="text-h4 q-mb-md">Movies</div>
-                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam
-                                odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda
-                                consectetur culpa fuga nulla ullam. In, libero.</p>
+                            <report-search :searchText="searchText"></report-search>
                         </q-tab-panel>
 
                         <q-tab-panel name="emotion">
                             <div class="text-h4 q-mb-md">Emotion</div>
-                            <report-emotion></report-emotion>
+                            <report-emotion :scoreStr="selectStr"></report-emotion>
                         </q-tab-panel>
 
                         <q-tab-panel name="relation">
-                            <div class="text-h4 q-mb-md">Movies</div>
+                            <div class="text-h4 q-mb-md">
+                                <div>金融知识图谱</div>
+                                <div>关系展示</div>
+                            </div>
+                            <report-relation></report-relation>
                         </q-tab-panel>
                     </q-tab-panels>
                 </template>
@@ -107,9 +97,10 @@
                     </q-card>
 
                     <q-card v-for="n in 15" :key="n" class="col report-card q-pa-xs" align="left" flat
-                            style="text-indent: 2ch;" v-ripple>
+                            style="text-indent: 2ch;" v-ripple="false">
 
-                        <div class="text-body2" style="width: 100%;border-right: 2px solid #26A69A">
+                        <div class="text-body2" style="width: 100%;border-right: 2px solid #26A69A;cursor: pointer"
+                             v-ripple @click="selectReportStr">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit nihil praesentium
                             molestias a
                             adipisci, dolore vitae odit, quidem consequatur optio voluptates asperiores pariatur eos
@@ -128,21 +119,40 @@
 <script scoped>
     import reportIndex from "@/components/reportIndex";
     import reportEmotion from "@/components/reportEmotion";
+    import reportEntity from "@/components/reportEntity";
+    import reportSearch from "@/components/reportSearch";
+    import reportRelation from "@/components/reportRelation";
 
     export default {
         name: "PdfViewPage",
-        components: {reportIndex, reportEmotion},
+        components: {reportRelation, reportIndex, reportEmotion, reportEntity, reportSearch},
+        watch: {
+            searchText: function () {
+                this.tab = "search"
+            }
+        },
         data() {
             return {
                 left: false,
                 tab: 'index',
                 splitterModel: 20,
                 drawWidth: 350,
-                text: '',
-                ph: '',
+                codeText: '',
+                selectStr: "",
+                searchText: "",
+                yearChoose: "2019",
+                yearOptions: ['2016', '2017', '2018', '2019'],
+                typeChoose: "年报",
+                typeOptions: ['年报', '半年报', '一季报', '三季报'],
 
             }
         },
+        methods: {
+            selectReportStr: function (e) {
+                this.selectStr = e.target.innerText;
+            }
+        }
+
     }
 </script>
 
