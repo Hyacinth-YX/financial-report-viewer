@@ -18,9 +18,9 @@
                 </q-input>
             </q-toolbar>
             <div class="fit row justify-end items-end  q-gutter-md">
-                <q-select v-model="yearChoose" :options="yearOptions" bg-color="white" label="年度"
+                <q-select v-model="yearChoose" :options="yearOptions" bg-color="white" label="年度" rounded
                           class="q-ma-sm q-pt-md " style="min-width: 150px" dense/>
-                <q-select v-model="typeChoose" :options="typeOptions" bg-color="white" label="公告类型"
+                <q-select v-model="typeChoose" :options="typeOptions" bg-color="white" label="公告类型" rounded
                           class="q-ma-sm q-pd-md" style="min-width: 150px" dense/>
             </div>
         </q-header>
