@@ -30,30 +30,32 @@
             return {
                 simple: [
                     {
-                        label: 'Satisfied customers',
+                        label: '实体',
                         children: [
                             {
-                                label: 'Good food',
+                                label: '企业',
                                 children: [
-                                    {label: 'Quality ingredients'},
-                                    {label: 'Good recipe'}
+                                    {label: '交银施罗德资管'},
+                                    {label: '中国平安财产保险股份有限公司'},
+                                    {label: '中国平安人寿保险股份有限公司'},
+                                    {label: '中国银行股份有限公司上海市分行 '},
+                                    {label:'中国证券金融股份有限公司'},
+                                    {label:'深圳中电投资股份有限公司'},
+                                    {label:'招商财富'}
                                 ]
                             },
                             {
-                                label: 'Good service (disabled node) (*)',
+                                label: '人名',
                                 children: [
-                                    {label: 'Prompt attention'},
-                                    {label: 'Professional waiter'}
+                                    {label: '项有志'},
+                                    {label: '杨如生'},
+                                    {label:'郭田勇'},
+                                    {label:'杨志群'},
+                                    {label:'邱伟'},
+                                    {label:'车国宝'},
+                                    {label:'王春汉'},
                                 ]
                             },
-                            {
-                                label: 'Pleasant surroundings',
-                                children: [
-                                    {label: 'Happy atmosphere'},
-                                    {label: 'Good table presentation'},
-                                    {label: 'Pleasing decor'}
-                                ]
-                            }
                         ]
                     }
                 ],

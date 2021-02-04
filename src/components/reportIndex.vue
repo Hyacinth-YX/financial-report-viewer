@@ -1,38 +1,55 @@
 <template>
     <div style="width: 100%;height: 100%">
-            <q-scroll-area
-                    :thumb-style="thumbStyle"
-                    :bar-style="barStyle"
-                    style="height:900px; max-width: 100%"
-            >
-                <Tree :value="treeData" align="left">
+        <q-scroll-area
+                :thumb-style="thumbStyle"
+                :bar-style="barStyle"
+                style="height:900px; max-width: 100%"
+                draggable="false"
+        >
+
+            <Tree :value="treeData" align="left">
                     <span slot-scope="{node, index, path, tree}">
+                        <div v-if="path.length<=1" style="white-space: nowrap;overflow: scroll;">
                         <q-checkbox v-model="checkLoad" :val="node.text" @change="tree.toggleCheck(node, path)"
-                                    color="cyan"/>
-                        <q-btn :style="'left: '+(path.length-1) + 'px' " flat no-caps
-                               @click="tree.toggleFold(node, path)" :label="node.text"></q-btn>
+                                    color="cyan" style="float: left"/>
+                            <div style="max-width: 180px;display: inline">
+                                    {{node.text}}
+                                </div>
+                        </div>
                     </span>
-                </Tree>
-            </q-scroll-area>
+            </Tree>
+        </q-scroll-area>
+
     </div>
 </template>
 
 <script>
     import {Tree, Check, Draggable, Fold} from 'he-tree-vue'
-    // import {
-    //     Tree, // 基础树
-    //     Fold, Check, Draggable, // 插件: 折叠, 勾选框, 拖拽
-    //     foldAll, unfoldAll, cloneTreeData, walkTreeData, getPureTreeData, //方法
-    // } from 'he-tree-vue'
-    // import 'he-tree-vue/dist/he-tree-vue.css' // 基础样式
+
+    var _ = require('lodash');
     export default {
         name: "reportIndex",
         components: {Tree: Tree.mixPlugins([Check, Draggable, Fold])},
+        computed: {
+            newTreeData: function () {
+                return _.filter(this.treeData, function (o) {
+                    return o.children.length > 0;
+                });
+            }
+        },
+        watch: {
+            treeData: {
+                handler: function () {
+                    this.$emit("update:treeData", this.treeData)
+                },
+                deep: true
+            }
+        },
+        props: {
+            treeData: Array
+        },
         data() {
             return {
-                treeData: [{text: 'node 1', children: [{text: 'node 1-1'}, {text: 'node 1-2'}]},
-                    {text: 'node 2', children: [{text: 'node 2-1'}, {text: 'node 2-2'}]},
-                    {text: 'node 3', children: [{text: 'node 3-1'}, {text: 'node 3-2'}]}],
                 checkLoad: [],
                 thumbStyle: {
                     right: '4px',

@@ -13,7 +13,7 @@
             <q-separator />
             <q-card-section align="center">
                 <span class="text-h6">情绪评分：</span>
-                <span class="text-h6">6</span>
+                <span class="text-h6">{{Math.round(Math.random()*20-10)}}</span>
             </q-card-section>
         </q-card>
         <div>
