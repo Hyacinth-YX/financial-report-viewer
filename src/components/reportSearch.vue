@@ -1,10 +1,10 @@
 <template>
     <div>
-        <q-input bottom-slots v-model="searchText" outlined
+        <q-input bottom-slots v-model="searchText" outlined @keyup.enter="searchContent"
                  placeholder="搜索百科" :dense="true" color="blue-11" bg-color="white">
             <template v-slot:append>
                 <q-icon v-if="searchText !== ''" name="close" @click="searchText = '',showIFrame=false"
-                        class="cursor-pointer"/>
+                        class="cursor-pointer" />
                 <q-icon name="search" @click="searchContent"/>
             </template>
         </q-input>

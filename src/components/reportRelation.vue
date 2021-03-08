@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div style="height:calc(100vh - 50px);">
+        <div style="height:calc(40vh - 25px);">
             <RelationGraph ref="seeksRelationGraph" :options="graphOptions" :on-node-click="onNodeClick"
                            :on-line-click="onLineClick"/>
         </div>

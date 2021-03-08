@@ -7,7 +7,7 @@
                 label="Search - only filters labels that have also '(*)'"
         >
             <template v-slot:append>
-                <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter"/>
+                <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
             </template>
         </q-input>
 
